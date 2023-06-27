@@ -1,0 +1,287 @@
+create table restaurant(
+  	restaurant_id number(3) primary key,
+    name varchar(25),
+    address varchar(25),
+    phone_number varchar(25)
+);
+
+create table tables(
+    table_id number(3) PRIMARY KEY,
+    seating_capacity number(2),
+    restaurant_id number(3)
+);
+
+create table staff(
+	staff_id number(3) primary key,
+    name varchar(25),
+    position varchar(25),
+    salary varchar(10),
+    restaurant_id number(3)
+);
+
+create table customer(
+    customer_id number(3) primary key,
+    name varchar(25),
+    email varchar(25),
+    phone_number varchar(25)
+);
+
+create table orders(
+ 	order_id number(3) primary key,
+    order_date date,
+    order_time timestamp,
+    total_amount number(5),
+    customer_id number(3)
+);
+
+create table menu(
+	menu_id number(3) primary key,
+    item_name varchar(20),
+    description varchar(30),
+    price number(3,2),
+    restaurant_id number(3),
+    order_id number(3)
+);
+
+create table reservation(
+    reservation_id number(3) primary key,
+    reservation_date date,
+    reservation_time timestamp,
+    customer_id number(3),
+    restaurant_id number(3),
+    table_id number(3)
+);
+
+create table payment(
+    payment_id number(3) primary key, 
+    payment_date date ,
+    payment_time timestamp,
+    payment_amount number(4,2),
+    order_id number(3)
+);
+
+CREATE TABLE menu_tables (
+  id INT ,
+  menu_id INT ,
+  table_id INT ,
+  PRIMARY KEY (id),
+  FOREIGN KEY (menu_id) REFERENCES menu(menu_id),
+  FOREIGN KEY (table_id) REFERENCES tables(table_id)
+);
+
+
+alter table tables
+add foreign key (restaurant_id) references restaurant(restaurant_id);
+
+alter table staff
+add foreign key (restaurant_id) references restaurant(restaurant_id);
+
+alter table menu
+add foreign key (restaurant_id) references restaurant(restaurant_id)
+add foreign key (order_id) references orders(order_id);
+
+alter table reservation
+add foreign key (restaurant_id) references restaurant(restaurant_id)
+add foreign key (customer_id) references customer(customer_id)
+add foreign key (table_id) references tables(table_id);
+
+alter table payment
+add foreign key (order_id) references orders(order_id);
+
+alter table orders
+add foreign key (customer_id) references customer(customer_id);
+
+-- Inserting data into restaurant table
+
+  INSERT INTO restaurant VALUES(1, 'The Red Pepper', '123 Main St', '555-1234');
+  INSERT INTO restaurant VALUES(2, 'Italiano', '456 Oak St', '555-5678');
+  INSERT INTO restaurant VALUES(3, 'Chinese Palace', '789 Elm St', '555-9012');
+  INSERT INTO restaurant VALUES(4, 'Indian Kaif', '456 Elm St', '555-3712');
+  INSERT INTO restaurant VALUES(5, 'The best Place', 'Moz-Ar St', '555-7015');
+
+-- Inserting data into tables table
+
+  INSERT INTO tables VALUES(1, 4, 1);
+  INSERT INTO tables VALUES(2, 6, 1);
+  INSERT INTO tables VALUES(3, 2, 2);
+  INSERT INTO tables VALUES(4, 4, 2);
+  INSERT INTO tables VALUES(5, 8, 3);
+
+-- Inserting data into staff table
+
+  INSERT INTO staff VALUES(1, 'John Smith', 'Manager', '5000', 1);
+  INSERT INTO staff VALUES(2, 'Jane Doe', 'Waitress', '2000', 1);
+  INSERT INTO staff VALUES(3, 'Mario Rossi', 'Chef', '3000', 2);
+  INSERT INTO staff VALUES(4, 'Luigi Bianchi', 'Waiter', '2500', 2);
+  INSERT INTO staff VALUES(5, 'Li Xu', 'Manager', '6000', 3);
+
+-- Inserting data into customer table
+
+  INSERT INTO customer VALUES(1, 'Alice Smith', 'alice@example.com', '555-1111');
+  INSERT INTO customer VALUES(2, 'Bob Johnson', 'bob@example.com', '555-2222');
+  INSERT INTO customer VALUES(3, 'Charlie Brown', 'charlie@example.com', '555-3333');
+  INSERT INTO customer VALUES(4, 'Diana Lee', 'diana@example.com', '555-4444');
+  INSERT INTO customer VALUES(5, 'Emma Davis', 'emma@example.com', '555-5555');
+
+-- Inserting data into orders table
+
+  INSERT INTO orders VALUES(1, DATE'2022-01-05', timestamp'2022-01-05 19:15:00', 32.50, 1);
+  INSERT INTO orders VALUES(2, DATE'2022-01-05', timestamp'2022-01-05 19:15:00', 26.97, 2);
+  INSERT INTO orders VALUES(3, DATE'2022-01-06', timestamp'2022-01-06 18:45:00', 17.49, 3);
+  INSERT INTO orders VALUES(4, DATE'2022-01-06', timestamp'2022-01-06 18:45:00', 25.50, 4);
+  INSERT INTO orders VALUES(5, DATE'2022-04-06', timestamp'2022-01-06 19:45:00', 27.50, 5);
+
+-- Inserting data into menu table
+
+  INSERT INTO menu VALUES(1, 'Spaghetti', 'With tomato sauce', 8.9, 2, 1);
+  INSERT INTO menu VALUES(2, 'Pizza', 'Margarita', 4.5, 2, 1);
+  INSERT INTO menu VALUES(3, 'Egg rolls', 'With sweet and sour sauce', 6.9, 3, 2);
+  INSERT INTO menu VALUES(4, 'Kung Pao Chicken', 'Spicy', 8.7, 3, 2);
+  INSERT INTO menu VALUES(5, 'Kung Lao Meat', ' Not spicy, so sweet', 8.9, 3, 2);
+
+-- Inserting data into reservation table
+
+  INSERT INTO reservation VALUES(1, DATE'2022-01-05', timestamp'2022-01-05 19:00:00', 1, 1, 1);
+  INSERT INTO reservation VALUES(2, DATE'2022-01-05', timestamp'2022-01-05 19:00:00', 2, 1, 2);
+  INSERT INTO reservation VALUES(3, DATE'2022-01-06', timestamp'2022-01-06 18:30:00', 3, 2, 3);
+  INSERT INTO reservation VALUES(4, DATE'2022-01-06', timestamp'2022-01-06 18:30:00', 4, 2, 4);
+  INSERT INTO reservation VALUES(5, DATE'2022-01-07', timestamp'2022-01-07 20:00:00', 5, 3, 5);
+
+-- Inserting data into payment table
+
+  INSERT INTO payment VALUES(1, DATE'2022-01-05', timestamp'2022-01-05 19:30:00', 25.5, 1);
+  INSERT INTO payment VALUES(2, DATE'2022-01-05', timestamp'2022-01-05 19:30:00', 26.9, 2);
+  INSERT INTO payment VALUES(3, DATE'2022-01-06', timestamp'2022-01-06 19:00:00', 45.4, 3);
+  INSERT INTO payment VALUES(4, DATE'2022-01-06', timestamp'2022-01-06 19:00:00', 15.5, 4);
+  INSERT INTO payment VALUES(5, DATE'2022-04-06', timestamp'2022-01-06 19:50:00', 27.5, 4);
+
+-- Inserting data into table_menu table
+
+  INSERT INTO menu_tables VALUES(1, 1, 1);
+  INSERT INTO menu_tables VALUES(2, 2, 1);
+  INSERT INTO menu_tables VALUES(3, 3, 3);
+  INSERT INTO menu_tables VALUES(4, 4, 4);
+  INSERT INTO menu_tables VALUES(5, 5, 4);
+
+
+-- Vytvorenie pohľadu, ktorý počíta počet položiek menu v každej reštaurácii
+CREATE VIEW menu_items_count AS 
+SELECT restaurant.name, COUNT(menu.menu_id) AS num_items 
+FROM restaurant 
+JOIN menu ON restaurant.restaurant_id = menu.restaurant_id 
+GROUP BY restaurant.name;
+
+-- Vytvorenie pohľadu, ktorý zobrazuje celkovú sumu objednanú každým zákazníkom
+CREATE VIEW customers_ordered_amount AS
+SELECT customer.name, SUM(orders.total_amount) AS ordered_amount
+FROM customer
+JOIN orders ON customer.customer_id = orders.customer_id
+GROUP BY customer.name;
+
+-- Vytvorenie zobrazenia, ktoré kombinuje informácie o rezerváciách s informáciami o zákazníkoch a stoloch
+CREATE VIEW reservation_info AS
+SELECT reservation.reservation_id, reservation.reservation_date, reservation.reservation_time, 
+       customer.name AS customer_name, tables.seating_capacity
+FROM reservation 
+JOIN customer ON reservation.customer_id = customer.customer_id
+JOIN tables ON reservation.table_id = tables.table_id;
+
+-- Vytvorenie zobrazenia, ktoré kombinuje informácie o položkách menu a objednávkach s informáciami o zákazníkoch
+CREATE VIEW menu_orders AS
+SELECT menu.menu_id, menu.item_name, menu.price, orders.order_date, orders.order_time, 
+       orders.total_amount, customer.name AS customer_name
+FROM menu 
+LEFT JOIN orders ON menu.order_id = orders.order_id
+LEFT JOIN customer ON orders.customer_id = customer.customer_id;
+
+-- Vytvorenie zobrazenia, ktoré kombinuje informácie o platbách a objednávkach s informáciami o zákazníkoch
+CREATE VIEW payment_info AS
+SELECT payment.payment_id, payment.payment_date, payment.payment_time, 
+       orders.order_date, customer.name AS customer_name
+FROM payment 
+JOIN orders ON payment.order_id = orders.order_id
+JOIN customer ON orders.customer_id = customer.customer_id;
+
+-- Vytvorenie pohľadu, ktorý zobrazuje celkové tržby pre každú reštauráciu
+CREATE VIEW total_sales AS
+SELECT restaurant.name, SUM(menu.price) AS total_sales
+FROM restaurant 
+JOIN menu ON restaurant.restaurant_id = menu.restaurant_id 
+GROUP BY restaurant.name;
+
+-- vytvorte pohľad, ktorý spočíta počet zamestnancov na jednotlivých pozíciách v každej reštaurácii
+CREATE VIEW staff_count AS
+SELECT restaurant.name, staff.position, COUNT(staff.staff_id) AS staff_count
+FROM restaurant 
+JOIN staff ON restaurant.restaurant_id = staff.restaurant_id 
+GROUP BY restaurant.name, staff.position;
+
+-- Vytvorenie zobrazenia, ktoré kombinuje informácie o zamestnancoch a zákazníkoch
+CREATE VIEW staff_customer AS
+SELECT staff_id, name, position, salary
+FROM staff
+UNION
+SELECT customer_id, name, 'Customer', NULL
+FROM customer;
+
+-- Vytvorenie pohľadu, ktorý počíta počet rezervácií v každej reštaurácii
+CREATE VIEW restaurant_reservations AS
+SELECT r.restaurant_id, r.name, COUNT(reservation_id) AS num_reservations
+FROM restaurant r
+JOIN reservation re ON r.restaurant_id = re.restaurant_id
+GROUP BY r.restaurant_id, r.name;
+
+-- Vytvorenie zobrazenia, ktoré zobrazuje celkovú sumu, ktorú každý zákazník utratil
+CREATE VIEW customer_orders AS
+SELECT c.customer_id, c.name, SUM(m.price) AS total_amount
+FROM customer c
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN menu m ON o.order_id = m.order_id
+GROUP BY c.customer_id, c.name;
+
+-- Vytvorenie sekvencie na generovanie ID reštaurácií
+CREATE SEQUENCE restaurant_seq
+START WITH 6
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Vytvorenie spúšťača, ktorý automaticky priradí nové ID reštaurácie pri vložení novej reštaurácie
+CREATE OR REPLACE TRIGGER restaurant_trigger
+BEFORE INSERT ON restaurant
+FOR EACH ROW
+BEGIN
+  SELECT restaurant_seq.NEXTVAL
+  INTO :new.restaurant_id
+  FROM dual;
+END;
+/
+
+-- Vytvorenie spúšťača, ktorý aktualizuje ceny položiek menu pri zmene celkovej sumy objednávky
+CREATE OR REPLACE TRIGGER menu_price_update
+AFTER UPDATE OF total_amount ON orders
+FOR EACH ROW
+BEGIN
+  UPDATE menu
+  SET price = price * :new.total_amount / :old.total_amount
+  WHERE order_id = :new.order_id;
+END;
+/
+
+
+INSERT INTO restaurant (name, address,phone_number) VALUES ('Te Restaurant', 'Te Location','555-4742');
+SELECT * FROM restaurant;
+
+
+
+INSERT INTO orders (order_id, total_amount) VALUES (6, 10);
+INSERT INTO menu (menu_id,order_id, item_name, price) VALUES (6,6, 'Burger', 8.5);
+
+-- Check the initial price of the menu item
+SELECT price FROM menu WHERE order_id = 6 AND item_name = 'Burger';
+
+-- Update the total amount of the order
+UPDATE orders SET total_amount = 5 WHERE order_id = 6;
+
+-- Check if the trigger has updated the price of the menu item
+SELECT price FROM menu WHERE order_id = 6 AND item_name = 'Burger';

@@ -1,0 +1,175 @@
+create table restaurant(
+  	restaurant_id number(3) not null primary key,
+    name varchar(25) not null,
+    address varchar(25) not null,
+    phone_number varchar(25) not null
+);
+
+create table tables(
+    table_id number(3) NOT NULL PRIMARY KEY,
+    seating_capacity number(2) not null,
+    restaurant_id number(3) not null
+);
+
+create table staff(
+	staff_id number(3) not null primary key,
+    name varchar(25) not null,
+    position varchar(25) not null,
+    salary varchar(10) not null,
+    restaurant_id number(3) not null
+);
+
+create table customer(
+    customer_id number(3) not null primary key,
+    name varchar(25) not null,
+    email varchar(25) not null,
+    phone_number varchar(25) not null
+);
+
+create table orders(
+ 	order_id number(3) not null primary key,
+    order_date date not null,
+    order_time timestamp not null,
+    total_amount number(5) not null,
+    customer_id number(3) not null
+);
+
+create table menu(
+	menu_id number(3) not null primary key,
+    item_name varchar(20) not null,
+    description varchar(30) not null,
+    price number(3,2) not null,
+    restaurant_id number(3) not null,
+    order_id number(3) not null
+);
+
+create table reservation(
+    reservation_id number(3) not null primary key,
+    reservation_date date not null,
+    reservation_time timestamp not null,
+    customer_id number(3) not null,
+    restaurant_id number(3) not null,
+    table_id number(3) not null
+);
+
+create table payment(
+    payment_id number(3) not null primary key, 
+    payment_date date not null,
+    payment_time timestamp not null,
+    payment_amount number(4,2) not null,
+    order_id number(3) not null
+);
+
+CREATE TABLE menu_tables (
+  id INT NOT NULL,
+  menu_id INT NOT NULL,
+  table_id INT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (menu_id) REFERENCES menu(menu_id),
+  FOREIGN KEY (table_id) REFERENCES tables(table_id)
+);
+
+
+alter table tables
+add foreign key (restaurant_id) references restaurant(restaurant_id);
+
+alter table staff
+add foreign key (restaurant_id) references restaurant(restaurant_id);
+
+alter table menu
+add foreign key (restaurant_id) references restaurant(restaurant_id)
+add foreign key (order_id) references orders(order_id);
+
+alter table reservation
+add foreign key (restaurant_id) references restaurant(restaurant_id)
+add foreign key (customer_id) references customer(customer_id)
+add foreign key (table_id) references tables(table_id);
+
+alter table payment
+add foreign key (order_id) references orders(order_id);
+
+alter table orders
+add foreign key (customer_id) references customer(customer_id);
+
+-- Inserting data into restaurant table
+
+  INSERT INTO restaurant VALUES(1, 'The Red Pepper', '123 Main St', '555-1234');
+  INSERT INTO restaurant VALUES(2, 'Italiano', '456 Oak St', '555-5678');
+  INSERT INTO restaurant VALUES(3, 'Chinese Palace', '789 Elm St', '555-9012');
+  INSERT INTO restaurant VALUES(4, 'Indian Kaif', '456 Elm St', '555-3712');
+  INSERT INTO restaurant VALUES(5, 'The best Place', 'Moz-Ar St', '555-7015');
+
+-- Inserting data into tables table
+
+  INSERT INTO tables VALUES(1, 4, 1);
+  INSERT INTO tables VALUES(2, 6, 1);
+  INSERT INTO tables VALUES(3, 2, 2);
+  INSERT INTO tables VALUES(4, 4, 2);
+  INSERT INTO tables VALUES(5, 8, 3);
+
+-- Inserting data into staff table
+
+  INSERT INTO staff VALUES(1, 'John Smith', 'Manager', '5000', 1);
+  INSERT INTO staff VALUES(2, 'Jane Doe', 'Waitress', '2000', 1);
+  INSERT INTO staff VALUES(3, 'Mario Rossi', 'Chef', '3000', 2);
+  INSERT INTO staff VALUES(4, 'Luigi Bianchi', 'Waiter', '2500', 2);
+  INSERT INTO staff VALUES(5, 'Li Xu', 'Manager', '6000', 3);
+
+-- Inserting data into customer table
+
+  INSERT INTO customer VALUES(1, 'Alice Smith', 'alice@example.com', '555-1111');
+  INSERT INTO customer VALUES(2, 'Bob Johnson', 'bob@example.com', '555-2222');
+  INSERT INTO customer VALUES(3, 'Charlie Brown', 'charlie@example.com', '555-3333');
+  INSERT INTO customer VALUES(4, 'Diana Lee', 'diana@example.com', '555-4444');
+  INSERT INTO customer VALUES(5, 'Emma Davis', 'emma@example.com', '555-5555');
+
+-- Inserting data into orders table
+
+  INSERT INTO orders VALUES(1, DATE'2022-01-05', timestamp'2022-01-05 19:15:00', 32.50, 1);
+  INSERT INTO orders VALUES(2, DATE'2022-01-05', timestamp'2022-01-05 19:15:00', 26.97, 2);
+  INSERT INTO orders VALUES(3, DATE'2022-01-06', timestamp'2022-01-06 18:45:00', 17.49, 3);
+  INSERT INTO orders VALUES(4, DATE'2022-01-06', timestamp'2022-01-06 18:45:00', 25.50, 4);
+  INSERT INTO orders VALUES(5, DATE'2022-04-06', timestamp'2022-01-06 19:45:00', 27.50, 5);
+
+-- Inserting data into menu table
+
+  INSERT INTO menu VALUES(1, 'Spaghetti', 'With tomato sauce', 8.9, 2, 1);
+  INSERT INTO menu VALUES(2, 'Pizza', 'Margarita', 4.5, 2, 1);
+  INSERT INTO menu VALUES(3, 'Egg rolls', 'With sweet and sour sauce', 6.9, 3, 2);
+  INSERT INTO menu VALUES(4, 'Kung Pao Chicken', 'Spicy', 8.7, 3, 2);
+  INSERT INTO menu VALUES(5, 'Kung Lao Meat', ' Not spicy, so sweet', 8.9, 3, 2);
+
+-- Inserting data into reservation table
+
+  INSERT INTO reservation VALUES(1, DATE'2022-01-05', timestamp'2022-01-05 19:00:00', 1, 1, 1);
+  INSERT INTO reservation VALUES(2, DATE'2022-01-05', timestamp'2022-01-05 19:00:00', 2, 1, 2);
+  INSERT INTO reservation VALUES(3, DATE'2022-01-06', timestamp'2022-01-06 18:30:00', 3, 2, 3);
+  INSERT INTO reservation VALUES(4, DATE'2022-01-06', timestamp'2022-01-06 18:30:00', 4, 2, 4);
+  INSERT INTO reservation VALUES(5, DATE'2022-01-07', timestamp'2022-01-07 20:00:00', 5, 3, 5);
+
+-- Inserting data into payment table
+
+  INSERT INTO payment VALUES(1, DATE'2022-01-05', timestamp'2022-01-05 19:30:00', 25.5, 1);
+  INSERT INTO payment VALUES(2, DATE'2022-01-05', timestamp'2022-01-05 19:30:00', 26.9, 2);
+  INSERT INTO payment VALUES(3, DATE'2022-01-06', timestamp'2022-01-06 19:00:00', 45.4, 3);
+  INSERT INTO payment VALUES(4, DATE'2022-01-06', timestamp'2022-01-06 19:00:00', 15.5, 4);
+  INSERT INTO payment VALUES(5, DATE'2022-04-06', timestamp'2022-01-06 19:50:00', 27.5, 4);
+
+-- Inserting data into table_menu table
+
+  INSERT INTO menu_tables VALUES(1, 1, 1);
+  INSERT INTO menu_tables VALUES(2, 2, 1);
+  INSERT INTO menu_tables VALUES(3, 3, 3);
+  INSERT INTO menu_tables VALUES(4, 4, 4);
+  INSERT INTO menu_tables VALUES(5, 5, 4);
+
+
+select * from restaurant;
+select * from tables;
+select * from staff;
+select * from menu;
+select * from reservation;
+select * from orders;
+select * from customer;
+select * from payment;
+select * from menu_tables
