@@ -1,0 +1,36 @@
+# Define the AQ function
+def AQ_algorithm(examples, queries):
+    # Create an empty decision tree
+    decision_tree = {}
+
+    # While there are still queries to ask
+    while queries:
+        # Choose the next query randomly
+        query = queries.pop(0)
+        
+        # Divide the examples into positive and negative based on the query
+        pos_examples = [ex for ex in examples if ex[query[0]] == query[1]]
+        neg_examples = [ex for ex in examples if ex[query[0]] != query[1]]
+
+        # If all the positive examples have the same classification, add a leaf node to the decision tree
+        if len(pos_examples) > 0 and all(ex[-1] == pos_examples[0][-1] for ex in pos_examples):
+            decision_tree[query] = pos_examples[0][-1]
+        # If there are no positive examples, add a leaf node with the negative classification
+        elif len(pos_examples) == 0:
+            decision_tree[query] = neg_examples[0][-1]
+        # Otherwise, add a branch node and recursively call the AQ algorithm on the positive and negative examples
+        else:
+            decision_tree[query] = {}
+            decision_tree[query]['yes'] = AQ_algorithm(pos_examples, queries.copy())
+            decision_tree[query]['no'] = AQ_algorithm(neg_examples, queries.copy())
+
+    return decision_tree
+
+# Example usage
+examples = [[1, 'a', True], [2, 'b', True], [3, 'c', False], [4, 'd', False], [5, 'e', False]]
+queries = [(1, 'a'), (1, 'b'), (1, 'c'), (1, 'd'), (1, 'e'), (2, 'a'), (2, 'b'), (2, 'c'), (2, 'd'), (2, 'e')]
+
+decision_tree = AQ_algorithm(examples, queries)
+
+# Print the decision tree
+print(decision_tree)
